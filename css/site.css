@@ -25,20 +25,32 @@ body {
 .container {
   border-left: gray 1px solid;
   height: 100%;
-  width: 80%;
+  width: 90%;
   position: absolute;
   right: 0;
   display: flex;
   flex-direction: row;
 }
 
+@media (max-width:900px) {
+  .container {
+    width: 100%;
+  }
+}
+
 .nav {
   height: 100%;
-  width: 240px;
+  width: 340px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   padding: 1em 2em;
+}
+
+@media (max-width:900px) {
+  .nav {
+    display: none;
+  }
 }
 
 .links {
@@ -62,6 +74,12 @@ body {
   overflow: auto;
 }
 
+@media (max-width:900px) {
+  .resume-container {
+    margin: 0;
+  }
+}
+
 .resume {
   display: flex;
   flex-direction: column;
@@ -72,6 +90,13 @@ body {
   flex-direction: row;
   justify-content: space-evenly;
   padding: 40px 40px 0 40px;
+}
+
+@media (max-width:900px) {
+  .hi {
+    flex-direction: column;
+    padding: 20px 20px 0 20px;
+  }
 }
 
 .text {
@@ -98,6 +123,12 @@ body {
   padding: 0;
 }
 
+.main-image {
+  /*max-height: 600px;*/
+  width: 100%;
+  max-width: 300px;
+}
+
 .scroll-link {
   padding: 10px 0;
   text-decoration: none;
@@ -116,6 +147,12 @@ body {
   width: 100%;
   display: flex;
   flex-direction: row;
+}
+
+@media (max-width:500px) {
+  .resume-links {
+    flex-direction: column;
+  }
 }
 
 .button-link {
@@ -142,6 +179,12 @@ body {
   padding: 40px;
 }
 
+@media (max-width:900px) {
+  .resume-text {
+    padding: 20px;
+  }
+}
+
 .skills {
   display: flex;
   flex-direction: row;
@@ -151,8 +194,8 @@ body {
 .skill {
   display: flex;
   flex-direction: column;
-  margin: 10px 12px 10px 0;
-  flex-basis: calc(50% - 12px);
+  margin: 10px 24px 10px 0;
+  flex-basis: calc(50% - 24px);
 }
 
 @media (max-width:900px) {
