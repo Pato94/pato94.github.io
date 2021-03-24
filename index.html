@@ -32,17 +32,17 @@
     <div class="nav">
       <p class="logo"><!-- TODO --></p>
       <div class="links">
-        <a class="scroll-link" href="#">Home</a>
-        <a class="scroll-link" href="#">About</a>
-        <a class="scroll-link" href="#">Resume</a>
-        <a class="scroll-link" href="#">Contact</a>
+        <a class="scroll-link home active" href="#home">Home</a>
+        <a class="scroll-link about" href="#about">About</a>
+        <a class="scroll-link resume" href="#resume">Resume</a>
+        <a class="scroll-link contact" href="#contact">Contact</a>
       </div>
       <p class="social"><!-- TODO --></p>
     </div>
     <div class="content">
       <div class="resume-container">
         <div class="resume">
-          <div class="hi">
+          <section id="home" class="hi">
             <div class="text">
               <p class="hey">Hey! I'm</p>
               <h1 class="name">Cristian Contreras,</h1>
@@ -50,148 +50,155 @@
               <p class="title">a Software Engineer</p>
             </div>
             <img class="main-image" src="./img/pato.png"/>
-          </div>
+          </section>
           <div class="resume-links">
-            <a class="button-link download-resume" href="#">Download Resume</a>
-            <a class="button-link view-portfolio" href="#">View portfolio</a>
+            <a class="button-link download-resume" href="img/contreras_resume.pdf">Download Resume</a>
+            <a class="button-link view-portfolio" href="todo.html">View portfolio</a>
           </div>
           <div class="resume-text">
-            <h2 class="section-title">
-              About
-            </h2>
-            <div class="separator"></div>
-<!--            <h3 class="section-subtitle">A big nerd</h3> LOL if you read this-->
-            <p class="section-content">
-              I'm a software engineer based in Buenos Aires. I've been programming for fun for 10+ years, after a while I started getting paid for it.
-              Working completely remotely for over 2 years now, I'm not going back to an office soon.
-            </p>
-            <div class="skills">
-              <div class="skill">
-                <div class="skill-text">
+            <section id="about">
+              <h2 class="section-title">
+                About
+              </h2>
+              <div class="separator"></div>
+              <!--            <h3 class="section-subtitle">A big nerd</h3> LOL if you read this-->
+              <p class="section-content">
+                I'm a software engineer based in Buenos Aires. I've been programming for fun for 10+ years, after a
+                while I started getting paid for it.
+                Working completely remotely for over 2 years now, I'm not going back to an office soon.
+              </p>
+              <div class="skills">
+                <div class="skill">
+                  <div class="skill-text">
                   <span class="skill-title">
                     Android Development
                   </span>
-                  <span class="skill-percentage">
+                    <span class="skill-percentage">
                     95%
                   </span>
+                  </div>
+                  <div class="skill-level percent-95">
+                  </div>
                 </div>
-                <div class="skill-level percent-95">
-                </div>
-              </div>
-              <div class="skill">
-                <div class="skill-text">
+                <div class="skill">
+                  <div class="skill-text">
                   <span class="skill-title">
                     Web Development
                   </span>
-                  <span class="skill-percentage">
+                    <span class="skill-percentage">
                     80%
                   </span>
+                  </div>
+                  <div class="skill-level percent-80">
+                  </div>
                 </div>
-                <div class="skill-level percent-80">
-                </div>
-              </div>
-              <div class="skill">
-                <div class="skill-text">
+                <div class="skill">
+                  <div class="skill-text">
                   <span class="skill-title">
                     Communication
                   </span>
-                  <span class="skill-percentage">
+                    <span class="skill-percentage">
                     90%
                   </span>
+                  </div>
+                  <div class="skill-level percent-90">
+                  </div>
                 </div>
-                <div class="skill-level percent-90">
-                </div>
-              </div>
-              <div class="skill">
-                <div class="skill-text">
+                <div class="skill">
+                  <div class="skill-text">
                   <span class="skill-title">
                     Friendlyness
                   </span>
-                  <span class="skill-percentage">
+                    <span class="skill-percentage">
                     100%
                   </span>
-                </div>
-                <div class="skill-level percent-100">
-                </div>
-              </div>
-            </div>
-            <h2 class="section-title new-section">Resume</h2>
-            <div class="separator"></div>
-            <h3 class="section-subtitle">Education & Experiences</h3>
-            <div class="experience-block">
-              <div class="experience-list">
-                <div class="list-item">
-                  <div class="history-indicator">
-                    <div class="history-dot"></div>
                   </div>
-                  <div class="experience-item">
-                    <span class="experience-years">December 2020 - Present</span>
-                    <h4 class="experience-institution">Equinox Media - Android Engineer</h4>
-                    <span
-                      class="experience-description">I am part of a big development team (~30 ppl) for an android application, mostly working on UI atm.</span>
-                  </div>
-                </div>
-                <div class="list-item">
-                  <div class="history-indicator">
-                    <div class="history-dot"></div>
-                  </div>
-                  <div class="experience-item">
-                    <span class="experience-years">September 2019 - December 2020</span>
-                    <h4 class="experience-institution">VieMed - Android Engineer</h4>
-                    <span
-                      class="experience-description">Part of a very small team (2 ppl), I worked with some low level android apis such as bluetooth, wifi, working here was A LOT of fun.</span>
-                  </div>
-                </div>
-                <div class="list-item">
-                  <div class="history-indicator">
-                    <div class="history-dot"></div>
-                  </div>
-                  <div class="experience-item">
-                    <span class="experience-years">2015-2019</span>
-                    <h4 class="experience-institution">Software Engineer - Several companies</h4>
-                    <span
-                      class="experience-description">Not all my experience is focused on android, I have some experience with RoR, React, VueJS, React Native, NodeJS, and some other fun stuff.</span>
+                  <div class="skill-level percent-100">
                   </div>
                 </div>
               </div>
-
-              <div class="experience-list">
-                <div class="list-item">
-                  <div class="history-indicator">
-                    <div class="history-dot"></div>
-                  </div>
-                  <div class="experience-item">
-                    <span class="experience-years">2019 - Present</span>
-                    <h4 class="experience-institution">Universidad Tecnológica Nacional - Assistant Professor</h4>
-                    <span
-                      class="experience-description">I am an assistant professor in a very technical subject, we cover mostly topics related to modern systems architecture. You can go the the website of the subject <a href="https://www.tacs-utn.com.ar">here</a> (only available in spanish right now)</span>
-                  </div>
-                </div>
-                <div class="list-item">
-                  <div class="history-indicator">
-                    <div class="history-dot"></div>
-                  </div>
-                  <div class="experience-item">
-                    <span class="experience-years">2012-2018</span>
-                    <h4 class="experience-institution">Universidad Tecnológica Nacional - Ingeniería en Sistemas</h4>
-                    <span
-                      class="experience-description">Not a lot to say here. Learned some interesting stuff</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="contact-block">
-              <h2 class="section-title">
-                Contact
-              </h2>
+            </section>
+            <section id="resume">
+              <h2 class="section-title new-section">Resume</h2>
               <div class="separator"></div>
-              <h3 class="section-subtitle">Don't be shy 😬</h3>
+              <h3 class="section-subtitle">Education & Experiences</h3>
+              <div class="experience-block">
+                <div class="experience-list">
+                  <div class="list-item">
+                    <div class="history-indicator">
+                      <div class="history-dot"></div>
+                    </div>
+                    <div class="experience-item">
+                      <span class="experience-years">December 2020 - Present</span>
+                      <h4 class="experience-institution">Equinox Media - Android Engineer</h4>
+                      <span
+                        class="experience-description">I am part of a big development team (~30 ppl) for an android application, mostly working on UI atm.</span>
+                    </div>
+                  </div>
+                  <div class="list-item">
+                    <div class="history-indicator">
+                      <div class="history-dot"></div>
+                    </div>
+                    <div class="experience-item">
+                      <span class="experience-years">September 2019 - December 2020</span>
+                      <h4 class="experience-institution">VieMed - Android Engineer</h4>
+                      <span
+                        class="experience-description">Part of a very small team (2 ppl), I worked with some low level android apis such as bluetooth, wifi, working here was A LOT of fun.</span>
+                    </div>
+                  </div>
+                  <div class="list-item">
+                    <div class="history-indicator">
+                      <div class="history-dot"></div>
+                    </div>
+                    <div class="experience-item">
+                      <span class="experience-years">2015-2019</span>
+                      <h4 class="experience-institution">Software Engineer - Several companies</h4>
+                      <span
+                        class="experience-description">Not all my experience is focused on android, I have some experience with RoR, React, VueJS, React Native, NodeJS, and some other fun stuff.</span>
+                    </div>
+                  </div>
+                </div>
 
-              <ul>
-                <li>Email: pato9406@gmail.com</li>
-                <li>Phone Number: +5491168915184</li>
-              </ul>
-            </div>
+                <div class="experience-list">
+                  <div class="list-item">
+                    <div class="history-indicator">
+                      <div class="history-dot"></div>
+                    </div>
+                    <div class="experience-item">
+                      <span class="experience-years">2019 - Present</span>
+                      <h4 class="experience-institution">Universidad Tecnológica Nacional - Assistant Professor</h4>
+                      <span
+                        class="experience-description">I am an assistant professor in a very technical subject, we cover mostly topics related to modern systems architecture. You can go the the website of the subject <a
+                        href="https://www.tacs-utn.com.ar">here</a> (only available in spanish right now)</span>
+                    </div>
+                  </div>
+                  <div class="list-item">
+                    <div class="history-indicator">
+                      <div class="history-dot"></div>
+                    </div>
+                    <div class="experience-item">
+                      <span class="experience-years">2012-2018</span>
+                      <h4 class="experience-institution">Universidad Tecnológica Nacional - Ingeniería en Sistemas</h4>
+                      <span
+                        class="experience-description">Not a lot to say here. Learned some interesting stuff</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <section id="contact">
+              <div class="contact-block">
+                <h2 class="section-title">
+                  Contact
+                </h2>
+                <div class="separator"></div>
+                <h3 class="section-subtitle">Don't be shy 😬</h3>
+                <ul>
+                  <li>Email: pato9406@gmail.com</li>
+                  <li>Phone Number: +5491168915184</li>
+                </ul>
+              </div>
+            </section>
           </div>
         </div>
       </div>

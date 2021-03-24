@@ -132,10 +132,28 @@ body {
     margin-top: 30px;
   }
 }
+
 .scroll-link {
+  position: relative;
   padding: 10px 0;
   text-decoration: none;
   color: var(--white);
+}
+
+.scroll-link::before {
+  content: "";
+  width: 0;
+  background: var(--orange-web);
+  height: 4px;
+  border-radius: 1px;
+  position: absolute;
+  bottom: 2px;
+  left: 0;
+  transition: .2s linear;
+}
+
+.scroll-link.active::before {
+  width: 100%;
 }
 
 .logo {
