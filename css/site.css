@@ -234,3 +234,61 @@ body {
   bottom: 0;
   left: 0;
 }
+
+.new-section {
+  margin-top: 60px;
+}
+
+.experience-block {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.experience-list {
+  display: flex;
+  flex-direction: column;
+  /*margin: 10px 24px 10px 0;*/
+  flex-basis: calc(50% - 24px);
+}
+
+
+@media (max-width:767px) {
+  .experience-list {
+    flex-basis: 100%;
+  }
+}
+
+.list-item {
+  display: flex;
+  flex-direction: row;
+  margin-top: 10px;
+}
+
+.experience-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.history-indicator {
+  position: relative;
+  width: 40px;
+}
+
+.history-dot {
+  height: 10px;
+  width: 10px;
+  background: var(--orange-web);
+  position: absolute;
+  top: 10px;
+  left: calc(50% - 10px);
+  border-radius: 5px;
+}
+
+.experience-years {
+  font-size: 0.8rem;
+}
+
+.experience-institution {
+  margin: 0;
+}
