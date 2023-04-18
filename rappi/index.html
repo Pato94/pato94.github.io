@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rappi Parser</title>
+</head>
+<style>
+    .content {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        height: 100vh;
+    }
+    .child {
+        flex-grow: 1;
+        margin: 20px;
+    }
+    .result {
+        background-color: red;
+
+    }
+</style>
+<script>
+    function parsePurchases(input) {
+        var purchases = []
+        var purchase = []
+        var date_pattern = /^(?<date>\d\d\/\d\d\/\d\d\d\d).*\$ (?<price>[\d.,]+)/
+        var lines = input.split("\n")
+        for (var line of lines) {
+            if (line.startsWith("Mora")) {
+                purchase.push(line)
+            }
+            var res = date_pattern.exec(line)
+            if (res) {
+                purchase.push(res.groups["date"])
+                var money = parseFloat(res.groups["price"].replace(".", "").replace(",", "."))
+                purchase.push(money)
+            }
+            if (line === "Entregado" || line === "Cancelado")
+            {
+                purchase.push(line)
+            }
+            if (purchase.length > 3) {
+                console.log(purchase)
+                purchases.push(purchase)
+                purchase = []
+            }
+        }
+        console.log(purchases)
+
+        var dates = new Set(purchases.map((it) => it[1]))
+        console.log(dates)
+        var sums = {}
+        var grouped = {}
+        for (var date of dates) {
+            for (var purchase of purchases) {
+                if (date === purchase[1]) {
+                    // Only sum completed purchases
+                    if (purchase[3] === "Entregado") {
+                        var current = sums[date] || 0
+                        sums[date] = current + purchase[2]
+                        current = grouped[date] || []
+                        current.push(purchase)
+                    }
+                }
+            }
+        }
+        grouped[date] = current
+        return sums;
+    }
+    onload = function() {
+        document.getElementById("source").addEventListener('input', function(e) {
+            var text = e.target.value;
+            console.log(parsePurchases(text));
+        })
+    }
+</script>
+<body>
+    <h1>Rappi Parser</h1>
+    <p>Copiá el contenido de la página de pedidos de rappi en la izquierda, y generaré interesantes resultados a tu derecha!</p>
+
+<div class="content">
+    <textarea class="child" name="source" id="source"></textarea>
+    <div class="child result"></div>
+</div>
+</body>
+</html>
