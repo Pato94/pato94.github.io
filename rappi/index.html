@@ -17,8 +17,11 @@
     }
     .result {
         background-color: red;
-
     }
+    .date {
+        cursor: pointer;
+    }
+
 </style>
 <script>
     function parsePurchases(input) {
@@ -41,37 +44,69 @@
                 purchase.push(line)
             }
             if (purchase.length > 3) {
-                console.log(purchase)
+                // console.log(purchase)
                 purchases.push(purchase)
                 purchase = []
             }
         }
-        console.log(purchases)
 
         var dates = new Set(purchases.map((it) => it[1]))
-        console.log(dates)
-        var sums = {}
         var grouped = {}
         for (var date of dates) {
-            for (var purchase of purchases) {
-                if (date === purchase[1]) {
+            for (var pur of purchases) {
+                if (date === pur[1]) {
                     // Only sum completed purchases
-                    if (purchase[3] === "Entregado") {
-                        var current = sums[date] || 0
-                        sums[date] = current + purchase[2]
-                        current = grouped[date] || []
-                        current.push(purchase)
+                    var current = grouped[date] || {}
+                    if (pur[3] === "Entregado") {
+                        current.sum = (current.sum || 0) + pur[2]
                     }
+                    var list = (current.purchases || [])
+                    list.push(pur)
+                    current.purchases = list
+                    grouped[date] = current
                 }
             }
         }
-        grouped[date] = current
-        return sums;
+        return grouped;
     }
     onload = function() {
         document.getElementById("source").addEventListener('input', function(e) {
+            var result = document.getElementById("result");
+            // Clear result
+            while (result.hasChildNodes()) {
+                result.removeChild(result.lastChild);
+            }
+
             var text = e.target.value;
-            console.log(parsePurchases(text));
+
+            var grouped = parsePurchases(text);
+            var ul = document.createElement("ul");
+            for (let k in grouped) {
+                var date = document.createElement("li");
+                date.classList.add("date");
+                date.textContent = `${k} - $${grouped[k].sum}`
+                if (grouped[k].purchases && grouped[k].purchases.length > 0) {
+                    let sublist = document.createElement("ul");
+                    sublist.style.display = 'none';
+                    sublist.id = k;
+                    for (var j of grouped[k].purchases) {
+                        var purchase = document.createElement("li");
+                        purchase.textContent = `${j[0]} - $${j[2]} - ${j[3]}`
+                        sublist.appendChild(purchase)
+                    }
+                    date.appendChild(sublist)
+                    date.onclick = function() {
+                        console.log(`${sublist.style.display}`)
+                        if (sublist.style.display === 'none') {
+                            sublist.style.display = '';
+                        } else {
+                            sublist.style.display = 'none';
+                        }
+                    }
+                }
+                ul.appendChild(date)
+            }
+            result.appendChild(ul)
         })
     }
 </script>
@@ -81,7 +116,7 @@
 
 <div class="content">
     <textarea class="child" name="source" id="source"></textarea>
-    <div class="child result"></div>
+    <div class="child" id="result"></div>
 </div>
 </body>
 </html>
