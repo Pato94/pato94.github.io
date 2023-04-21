@@ -39,7 +39,7 @@
                 var money = parseFloat(res.groups["price"].replace(".", "").replace(",", "."))
                 purchase.push(money)
             }
-            if (line === "Entregado" || line === "Cancelado")
+            if (line.toUppercase() === "Entregado".toUpperCase() || line.toUpperCase() === "Cancelado".toUpperCase())
             {
                 purchase.push(line)
             }
@@ -57,7 +57,7 @@
                 if (date === pur[1]) {
                     // Only sum completed purchases
                     var current = grouped[date] || {}
-                    if (pur[3] === "Entregado") {
+                    if (pur[3].toUpperCase() === "Entregado".toUpperCase()) {
                         current.sum = (current.sum || 0) + pur[2]
                     }
                     var list = (current.purchases || [])
