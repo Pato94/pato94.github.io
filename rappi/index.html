@@ -39,7 +39,7 @@
                 var money = parseFloat(res.groups["price"].replace(".", "").replace(",", "."))
                 purchase.push(money)
             }
-            if (line.toUppercase() === "Entregado".toUpperCase() || line.toUpperCase() === "Cancelado".toUpperCase())
+            if (line.toUpperCase() === "Entregado".toUpperCase() || line.toUpperCase() === "Cancelado".toUpperCase())
             {
                 purchase.push(line)
             }
