@@ -31,20 +31,30 @@
         var lines = input.split("\n")
         for (var line of lines) {
             if (line.startsWith("Mora")) {
+                if (purchase.length !== 0) {
+                    console.log(purchases)
+                    throw new Error(`Found store ${mora}, but purchase length is ${purchase.length}, [${purchase.join(", ")}]`)
+                }
                 purchase.push(line)
+                continue
             }
             var res = date_pattern.exec(line)
             if (res) {
+                if (purchase.length !== 1) {
+                    console.log(purchases)
+                    throw new Error(`Found date ${res}, but purchase length is ${purchase.length}, [${purchase.join(", ")}]`)
+                }
                 purchase.push(res.groups["date"])
                 var money = parseFloat(res.groups["price"].replace(".", "").replace(",", "."))
                 purchase.push(money)
+                continue
             }
-            if (line.toUpperCase() === "Entregado".toUpperCase() || line.toUpperCase() === "Cancelado".toUpperCase())
-            {
+            if (line.toUpperCase() === "Entregado".toUpperCase() || line.toUpperCase() === "Cancelado".toUpperCase()) {
+                if (purchase.length !== 3) {
+                    console.log(purchases)
+                    throw new Error(`Found status ${line}, but purchase length is ${purchase.length}, [${purchase.join(", ")}]`)
+                }
                 purchase.push(line)
-            }
-            if (purchase.length > 3) {
-                // console.log(purchase)
                 purchases.push(purchase)
                 purchase = []
             }
