@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script>
+        // Fallback if CDN fails
+        if (typeof QRCode === 'undefined') {
+            document.write('<script src="https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js"><\/script>');
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>QR Code Generator</h1>
+            <p>Generate QR codes from URLs or text</p>
+        </header>
+        
+        <main>
+            <div class="input-section">
+                <div class="input-group">
+                    <label for="qr-input">Enter URL or text:</label>
+                    <input type="text" id="qr-input" placeholder="https://example.com or any text...">
+                </div>
+                <button id="generate-btn">Generate QR Code</button>
+            </div>
+            
+            <div class="qr-section" id="qr-section" style="display: none;">
+                <h2>Your QR Code</h2>
+                <div class="qr-container">
+                    <div id="qr-canvas"></div>
+                </div>
+                <div class="qr-actions">
+                    <button id="download-btn">Download QR Code</button>
+                    <button id="share-btn">Share Link</button>
+                    <button id="clear-btn">Clear</button>
+                </div>
+                <div class="share-info" id="share-info" style="display: none;">
+                    <div class="share-link">
+                        <label>Generated Link:</label>
+                        <div class="link-container">
+                            <input type="text" id="share-link-input" readonly>
+                            <button id="copy-link-btn">Copy</button>
+                        </div>
+                    </div>
+                    <div class="share-text">
+                        <label>Text Content:</label>
+                        <div class="text-container">
+                            <textarea id="share-text-input" readonly rows="3"></textarea>
+                            <button id="copy-text-btn">Copy</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="url-section">
+                <h3>Or use URL parameter:</h3>
+                <p>Add <code>?code=yourtext</code> to the URL to generate a QR code automatically</p>
+                <div class="example">
+                    <strong>Example:</strong> <code>qr/index.html?code=Hello World</code>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
