@@ -20,6 +20,7 @@ function initApp() {
     const shareTextInput = document.getElementById('share-text-input');
     const copyLinkBtn = document.getElementById('copy-link-btn');
     const copyTextBtn = document.getElementById('copy-text-btn');
+    const charCounter = document.getElementById('char-counter');
 
     // Check for URL parameter on page load
     const urlParams = new URLSearchParams(window.location.search);
@@ -41,6 +42,16 @@ function initApp() {
         }
         
         qrInput.value = decodedText;
+        // Update character counter for URL parameter
+        const length = decodedText.length;
+        charCounter.textContent = `${length} / 2,953 characters`;
+        if (length > 2657) { // 90% of max
+            charCounter.style.color = '#dc3545';
+        } else if (length > 2067) { // 70% of max
+            charCounter.style.color = '#ffc107';
+        } else {
+            charCounter.style.color = '#6c757d';
+        }
         generateQRCode(decodedText);
     }
 
@@ -50,7 +61,7 @@ function initApp() {
         if (text) {
             generateQRCode(text);
         } else {
-            alert('Please enter some text or URL');
+            showError('Please enter some text or URL to generate a QR code.');
         }
     });
 
@@ -58,6 +69,22 @@ function initApp() {
     qrInput.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
             generateBtn.click();
+        }
+    });
+
+    // Character counter
+    qrInput.addEventListener('input', function() {
+        const length = this.value.length;
+        const maxLength = 2953;
+        charCounter.textContent = `${length} / ${maxLength} characters`;
+        
+        // Change color based on length
+        if (length > maxLength * 0.9) {
+            charCounter.style.color = '#dc3545'; // Red when approaching limit
+        } else if (length > maxLength * 0.7) {
+            charCounter.style.color = '#ffc107'; // Yellow when getting close
+        } else {
+            charCounter.style.color = '#6c757d'; // Default gray
         }
     });
 
@@ -93,7 +120,7 @@ function initApp() {
             
             console.log('Share button clicked, text:', text, 'link:', shareLink);
         } else {
-            alert('Please enter some text first');
+            showError('Please enter some text first to create a shareable link.');
         }
     });
 
@@ -114,6 +141,8 @@ function initApp() {
         qrInput.value = '';
         qrSection.style.display = 'none';
         shareInfo.style.display = 'none';
+        charCounter.textContent = '0 / 2,953 characters';
+        charCounter.style.color = '#6c757d';
         qrInput.focus();
     });
 
@@ -121,27 +150,74 @@ function initApp() {
         // Clear previous QR code by clearing the canvas content
         qrCanvas.innerHTML = '';
         
-        // Generate new QR code using the correct API
-        new QRCode(qrCanvas, {
-            text: text,
-            width: 512,
-            height: 512,
-            colorDark: '#000000',
-            colorLight: '#FFFFFF',
-            correctLevel: QRCode.CorrectLevel.H
-        });
+        // Validate text length
+        if (text.length > 2953) { // Maximum for QR Code version 40 with L correction level
+            showError('The text is too long for a QR code. Please shorten it to less than 2,953 characters.');
+            return;
+        }
         
-        // Show the QR code section
-        qrSection.style.display = 'block';
+        try {
+            // Generate new QR code with lower correction level to fit more data
+            new QRCode(qrCanvas, {
+                text: text,
+                width: 512,
+                height: 512,
+                colorDark: '#000000',
+                colorLight: '#FFFFFF',
+                correctLevel: QRCode.CorrectLevel.L // Changed from H to L for more data capacity
+            });
+            
+            // Show the QR code section
+            qrSection.style.display = 'block';
+            
+            // Update the URL with the generated code using base64 encoding
+            const currentUrl = window.location.origin + window.location.pathname;
+            const encodedText = btoa(text);
+            const newUrl = `${currentUrl}?code=${encodedText}`;
+            window.history.pushState({ text: text }, '', newUrl);
+            
+            // Scroll to QR code section
+            qrSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+        } catch (error) {
+            console.error('QR Code generation error:', error);
+            showError('Failed to generate QR code. The text might be too long or contain unsupported characters. Please try shortening it.');
+        }
+    }
+
+    function showError(message) {
+        // Create or update error message
+        let errorDiv = document.getElementById('error-message');
+        if (!errorDiv) {
+            errorDiv = document.createElement('div');
+            errorDiv.id = 'error-message';
+            errorDiv.className = 'error-message';
+            errorDiv.style.cssText = `
+                background-color: #f8d7da;
+                color: #721c24;
+                padding: 12px;
+                border: 1px solid #f5c6cb;
+                border-radius: 4px;
+                margin: 10px 0;
+                font-size: 14px;
+                line-height: 1.4;
+            `;
+            
+            // Insert after the input section
+            const inputSection = document.querySelector('.input-section');
+            inputSection.parentNode.insertBefore(errorDiv, inputSection.nextSibling);
+        }
         
-        // Update the URL with the generated code using base64 encoding
-        const currentUrl = window.location.origin + window.location.pathname;
-        const encodedText = btoa(text);
-        const newUrl = `${currentUrl}?code=${encodedText}`;
-        window.history.pushState({ text: text }, '', newUrl);
+        errorDiv.textContent = message;
+        errorDiv.style.display = 'block';
         
-        // Scroll to QR code section
-        qrSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // Auto-hide after 5 seconds
+        setTimeout(() => {
+            errorDiv.style.display = 'none';
+        }, 5000);
+        
+        // Scroll to error message
+        errorDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
     function showCopyFeedback(button, message) {

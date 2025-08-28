@@ -70,6 +70,37 @@ input[type="text"]:focus {
     border-color: #667eea;
 }
 
+.char-counter {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-top: 0.25rem;
+    text-align: right;
+    transition: color 0.3s ease;
+}
+
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 12px;
+    border: 1px solid #f5c6cb;
+    border-radius: 4px;
+    margin: 10px 0;
+    font-size: 14px;
+    line-height: 1.4;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 button {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
