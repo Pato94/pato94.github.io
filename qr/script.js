@@ -26,18 +26,18 @@ function initApp() {
     const codeParam = urlParams.get('code');
     
     if (codeParam) {
-        // Decode base64 if it looks like base64, otherwise use as-is
+        // Decode base64 parameter to get the original text
         let decodedText;
         try {
-            // Check if it's base64 encoded
-            if (codeParam.match(/^[A-Za-z0-9+/]*={0,2}$/)) {
-                decodedText = atob(codeParam);
-            } else {
-                decodedText = decodeURIComponent(codeParam);
-            }
+            decodedText = atob(codeParam);
         } catch (e) {
-            // If decoding fails, use the original parameter
-            decodedText = codeParam;
+            // If base64 decoding fails, try URL decoding as fallback
+            try {
+                decodedText = decodeURIComponent(codeParam);
+            } catch (e2) {
+                // If both fail, use the original parameter
+                decodedText = codeParam;
+            }
         }
         
         qrInput.value = decodedText;
@@ -76,9 +76,9 @@ function initApp() {
     shareBtn.addEventListener('click', function() {
         const text = qrInput.value.trim();
         if (text) {
-            // Generate the share link
+            // Generate the share link using base64 encoding
             const currentUrl = window.location.origin + window.location.pathname;
-            const encodedText = encodeURIComponent(text);
+            const encodedText = btoa(text);
             const shareLink = `${currentUrl}?code=${encodedText}`;
             
             // Update the share info
@@ -134,9 +134,9 @@ function initApp() {
         // Show the QR code section
         qrSection.style.display = 'block';
         
-        // Update the URL with the generated code
+        // Update the URL with the generated code using base64 encoding
         const currentUrl = window.location.origin + window.location.pathname;
-        const encodedText = encodeURIComponent(text);
+        const encodedText = btoa(text);
         const newUrl = `${currentUrl}?code=${encodedText}`;
         window.history.pushState({ text: text }, '', newUrl);
         
