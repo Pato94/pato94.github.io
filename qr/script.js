@@ -124,8 +124,8 @@ function initApp() {
         // Generate new QR code using the correct API
         new QRCode(qrCanvas, {
             text: text,
-            width: 256,
-            height: 256,
+            width: 512,
+            height: 512,
             colorDark: '#000000',
             colorLight: '#FFFFFF',
             correctLevel: QRCode.CorrectLevel.H
@@ -133,6 +133,12 @@ function initApp() {
         
         // Show the QR code section
         qrSection.style.display = 'block';
+        
+        // Update the URL with the generated code
+        const currentUrl = window.location.origin + window.location.pathname;
+        const encodedText = encodeURIComponent(text);
+        const newUrl = `${currentUrl}?code=${encodedText}`;
+        window.history.pushState({ text: text }, '', newUrl);
         
         // Scroll to QR code section
         qrSection.scrollIntoView({ behavior: 'smooth', block: 'center' });

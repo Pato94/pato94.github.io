@@ -59,9 +59,10 @@
             
             <div class="url-section">
                 <h3>Or use URL parameter:</h3>
-                <p>Add <code>?code=yourtext</code> to the URL to generate a QR code automatically</p>
+                <p>Add <code>?code=yourtext</code> to the URL to generate a QR code automatically. Text will be automatically base64 encoded if it contains special characters.</p>
                 <div class="example">
-                    <strong>Example:</strong> <code>qr/index.html?code=Hello World</code>
+                    <strong>Example:</strong> <code>qr/index.html?code=Hello World</code><br>
+                    <strong>Base64 example:</strong> <code>qr/index.html?code=SGVsbG8gV29ybGQ=</code> (Hello World)
                 </div>
             </div>
         </main>
