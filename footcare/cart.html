@@ -57,8 +57,18 @@
           <tr><td colspan="5" class="cart-empty">Loading…</td></tr>
         </tbody>
         <tfoot>
-          <tr class="total-row">
+          <tr data-subtotal-row style="display:none;">
             <td colspan="3" class="right">Subtotal</td>
+            <td class="right" data-cart-subtotal>$0.00</td>
+            <td></td>
+          </tr>
+          <tr data-discount-row style="display:none;">
+            <td colspan="3" class="right">Discount</td>
+            <td class="right" data-cart-discount>-$0.00</td>
+            <td></td>
+          </tr>
+          <tr class="total-row">
+            <td colspan="3" class="right">Total</td>
             <td class="right" data-cart-total>$0.00</td>
             <td></td>
           </tr>
@@ -69,6 +79,15 @@
         <a class="btn-secondary" href="./index.html">Continue Shopping</a>
         <button class="btn" data-checkout>Checkout</button>
       </div>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+      <h2 style="margin:0 0 10px;">Have a coupon?</h2>
+      <div style="display:flex; gap:10px;">
+        <input type="text" placeholder="Enter coupon code" data-coupon-input style="flex:1; padding:10px; border-radius:10px; border:1px solid var(--border); background:transparent; color:var(--text);">
+        <button class="btn" type="button" data-apply-coupon>Apply</button>
+      </div>
+      <p class="muted" style="margin-top:8px; font-size:14px;" data-coupon-status></p>
     </div>
   </main>
 

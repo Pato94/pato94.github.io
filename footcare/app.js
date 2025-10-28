@@ -1,6 +1,8 @@
 // Simple localStorage cart utilities
 const STORAGE_KEY = 'footcare_cart_v1';
 const USER_KEY = 'footcare_user_id_v1';
+// Coupon should not be persisted; keep it in-memory for this session only
+let currentCouponCode = '';
 
 function getOrCreateUserId() {
   let id = localStorage.getItem(USER_KEY);
@@ -71,6 +73,13 @@ function clearCart() {
   updateCartBadge();
 }
 
+// Helper to read coupon from input or in-memory value
+function getCouponFromUI() {
+  const el = document.querySelector('[data-coupon-input]');
+  if (el && typeof el.value === 'string') return el.value.trim();
+  return currentCouponCode;
+}
+
 function formatCurrency(n) {
   return new Intl.NumberFormat(undefined, { style: 'currency', currency: 'USD' }).format(n);
 }
@@ -78,6 +87,10 @@ function formatCurrency(n) {
 // Render cart table when on the cart page
 function renderCart() {
   const tableBody = document.querySelector('[data-cart-body]');
+  const subtotalEl = document.querySelector('[data-cart-subtotal]');
+  const discountEl = document.querySelector('[data-cart-discount]');
+  const discountRow = document.querySelector('[data-discount-row]');
+  const subtotalRow = document.querySelector('[data-subtotal-row]');
   const totalEl = document.querySelector('[data-cart-total]');
   if (!tableBody || !totalEl) return;
 
@@ -90,10 +103,10 @@ function renderCart() {
     return;
   }
 
-  let total = 0;
+  let subtotal = 0;
   for (const item of cart.items) {
     const lineTotal = item.price * item.quantity;
-    total += lineTotal;
+    subtotal += lineTotal;
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${item.name}</td>
@@ -107,6 +120,16 @@ function renderCart() {
     tableBody.appendChild(tr);
   }
 
+  // Calculate discount if coupon present
+  const hasCoupon = !!getCouponFromUI();
+  const discount = hasCoupon ? subtotal * 0.10 : 0;
+  const total = Math.max(0, subtotal - discount);
+
+  if (subtotalEl) subtotalEl.textContent = formatCurrency(subtotal);
+  if (discountEl) discountEl.textContent = `-${formatCurrency(discount)}`;
+  const showDiscount = discount > 0;
+  if (discountRow) discountRow.style.display = showDiscount ? 'table-row' : 'none';
+  if (subtotalRow) subtotalRow.style.display = showDiscount ? 'table-row' : 'none';
   totalEl.textContent = formatCurrency(total);
 
   // Bind qty inputs
@@ -163,6 +186,22 @@ document.addEventListener('DOMContentLoaded', () => {
       checkoutBtn.addEventListener('click', () => {
         // Simulate checkout: just go to thank you
         window.location.href = 'thank-you.html';
+      });
+    }
+
+    // Coupon handling
+    const couponInput = document.querySelector('[data-coupon-input]');
+    const couponApply = document.querySelector('[data-apply-coupon]');
+    const couponStatus = document.querySelector('[data-coupon-status]');
+    if (couponApply) {
+      couponApply.addEventListener('click', () => {
+        const code = (couponInput?.value || '').trim();
+        currentCouponCode = code;
+        if (couponStatus) {
+          couponStatus.textContent = code ? `Coupon "${code}" applied.` : 'Coupon cleared.';
+        }
+        // Re-render totals to apply discount
+        renderCart();
       });
     }
   }
