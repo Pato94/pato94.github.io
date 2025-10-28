@@ -1,5 +1,16 @@
 // Simple localStorage cart utilities
 const STORAGE_KEY = 'footcare_cart_v1';
+const USER_KEY = 'footcare_user_id_v1';
+
+function getOrCreateUserId() {
+  let id = localStorage.getItem(USER_KEY);
+  if (!id) {
+    // Generate a 26-char base36 ID with prefix
+    id = 'usr_' + Math.random().toString(36).slice(2, 11) + Math.random().toString(36).slice(2, 11);
+    localStorage.setItem(USER_KEY, id);
+  }
+  return id;
+}
 
 function readCart() {
   try {
@@ -118,6 +129,15 @@ function renderCart() {
 
 // Page bootstrapping
 document.addEventListener('DOMContentLoaded', () => {
+  // Identify user in Mixpanel (if available)
+  try {
+    const userId = getOrCreateUserId();
+    if (window.mixpanel && typeof window.mixpanel.identify === 'function') {
+      window.mixpanel.identify(userId);
+      window.mixpanel.register && window.mixpanel.register({ user_id: userId });
+    }
+  } catch (_) {}
+
   updateCartBadge();
 
   // Home page: Add to cart
