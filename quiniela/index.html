@@ -1,0 +1,1110 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tabla de los Sueños - Entrenador</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f7f4ee;
+      --surface: #fffdf8;
+      --surface-2: #f0f6f4;
+      --ink: #1f2933;
+      --muted: #65727d;
+      --line: #d8ddd7;
+      --accent: #0f766e;
+      --accent-dark: #0b5f59;
+      --good: #16803c;
+      --bad: #b3261e;
+      --warn: #9a6700;
+      --shadow: 0 18px 42px rgba(31, 41, 51, 0.12);
+      --radius: 8px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        linear-gradient(135deg, rgba(15, 118, 110, 0.08), transparent 32rem),
+        linear-gradient(315deg, rgba(154, 103, 0, 0.09), transparent 28rem),
+        var(--bg);
+      color: var(--ink);
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      min-height: 44px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--ink);
+      cursor: pointer;
+      transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
+    }
+
+    button:hover {
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    button:focus-visible,
+    input:focus-visible {
+      outline: 3px solid rgba(15, 118, 110, 0.28);
+      outline-offset: 2px;
+    }
+
+    button.primary {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: white;
+      font-weight: 750;
+    }
+
+    button.primary:hover {
+      background: var(--accent-dark);
+    }
+
+    button.ghost {
+      background: transparent;
+    }
+
+    button.choice {
+      width: 100%;
+      padding: 0.9rem 1rem;
+      text-align: left;
+      font-weight: 700;
+    }
+
+    button.choice.correct {
+      border-color: var(--good);
+      background: #e8f5ec;
+      color: var(--good);
+    }
+
+    button.choice.incorrect {
+      border-color: var(--bad);
+      background: #fdecea;
+      color: var(--bad);
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.72;
+      transform: none;
+    }
+
+    .app {
+      width: min(1120px, calc(100% - 1.5rem));
+      margin: 0 auto;
+      padding: 1.25rem 0 2rem;
+    }
+
+    header {
+      display: grid;
+      gap: 1rem;
+      align-items: end;
+      padding: 0.75rem 0 1rem;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      max-width: 13ch;
+      font-size: clamp(2.2rem, 9vw, 4.6rem);
+      line-height: 0.94;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      max-width: 58rem;
+      color: var(--muted);
+      font-size: 1.02rem;
+      line-height: 1.45;
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.4rem;
+      padding: 0.35rem;
+      margin: 0.75rem 0 1rem;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 253, 248, 0.74);
+      box-shadow: 0 8px 22px rgba(31, 41, 51, 0.06);
+    }
+
+    .tab {
+      padding: 0.75rem 0.4rem;
+      font-size: 0.95rem;
+      font-weight: 750;
+      background: transparent;
+      border-color: transparent;
+    }
+
+    .tab.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+
+    main {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .panel {
+      display: none;
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
+      gap: 1rem;
+      align-items: start;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 253, 248, 0.95);
+      box-shadow: var(--shadow);
+    }
+
+    .practice-card {
+      display: grid;
+      gap: 1rem;
+      padding: clamp(1rem, 4vw, 1.5rem);
+    }
+
+    .prompt-label {
+      color: var(--muted);
+      font-size: 0.85rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .prompt {
+      display: flex;
+      min-height: 9rem;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface-2);
+      text-align: center;
+      font-size: clamp(2.2rem, 11vw, 6rem);
+      font-weight: 850;
+      line-height: 1;
+    }
+
+    .prompt.meaning {
+      font-size: clamp(2rem, 8vw, 4.8rem);
+      line-height: 1.05;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+
+    .controls button {
+      flex: 1 1 10rem;
+      padding: 0.7rem 0.9rem;
+    }
+
+    .mode-toggle {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.4rem;
+      padding: 0.35rem;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #f8faf9;
+    }
+
+    .mode-toggle button {
+      min-height: 40px;
+      border-color: transparent;
+      background: transparent;
+      font-weight: 750;
+    }
+
+    .mode-toggle button.active {
+      background: var(--ink);
+      color: white;
+    }
+
+    .answer-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 0.55rem;
+    }
+
+    input[type="text"],
+    input[type="search"] {
+      width: 100%;
+      min-height: 48px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: white;
+      color: var(--ink);
+      padding: 0.72rem 0.85rem;
+    }
+
+    .feedback {
+      min-height: 3.25rem;
+      padding: 0.85rem;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fafafa;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    .feedback.good {
+      border-color: rgba(22, 128, 60, 0.45);
+      background: #eef9f1;
+      color: var(--good);
+      font-weight: 750;
+    }
+
+    .feedback.bad {
+      border-color: rgba(179, 38, 30, 0.4);
+      background: #fff1f0;
+      color: var(--bad);
+      font-weight: 750;
+    }
+
+    .side {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .stats-card,
+    .weak-card {
+      padding: 1rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.65rem;
+      margin-top: 0.85rem;
+    }
+
+    .stat {
+      min-height: 5rem;
+      padding: 0.8rem;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: white;
+    }
+
+    .stat span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.8rem;
+      font-weight: 750;
+    }
+
+    .stat strong {
+      display: block;
+      margin-top: 0.2rem;
+      font-size: 1.65rem;
+      line-height: 1;
+    }
+
+    .section-title {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+    }
+
+    .section-title h2,
+    .section-title h3 {
+      font-size: 1.05rem;
+    }
+
+    .weak-list {
+      display: grid;
+      max-height: 14rem;
+      gap: 0.45rem;
+      overflow: auto;
+      padding-right: 0.2rem;
+    }
+
+    .weak-item {
+      display: grid;
+      grid-template-columns: 3.5rem 1fr auto;
+      gap: 0.55rem;
+      align-items: center;
+      padding: 0.55rem;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: white;
+      font-size: 0.95rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      min-width: 2.6rem;
+      min-height: 2rem;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius);
+      background: var(--ink);
+      color: white;
+      font-weight: 850;
+    }
+
+    .count {
+      color: var(--warn);
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .choices {
+      display: grid;
+      gap: 0.65rem;
+    }
+
+    .mc-score {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      color: var(--muted);
+      font-weight: 750;
+    }
+
+    .table-tools {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 0.6rem;
+      align-items: center;
+      margin-bottom: 0.9rem;
+    }
+
+    .table-card {
+      padding: 1rem;
+    }
+
+    .entries {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
+      gap: 0.6rem;
+    }
+
+    .entry {
+      display: grid;
+      grid-template-columns: 3.25rem 1fr;
+      gap: 0.6rem;
+      align-items: center;
+      min-height: 4.25rem;
+      padding: 0.65rem;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: white;
+    }
+
+    .entry-number {
+      display: flex;
+      width: 3rem;
+      height: 3rem;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius);
+      background: var(--surface-2);
+      color: var(--accent-dark);
+      font-size: 1.35rem;
+      font-weight: 850;
+    }
+
+    .entry-meaning {
+      overflow-wrap: anywhere;
+      font-weight: 750;
+      line-height: 1.18;
+    }
+
+    .muted {
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .empty {
+      padding: 1rem;
+      border: 1px dashed var(--line);
+      border-radius: var(--radius);
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (max-width: 820px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .tabs {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .table-tools,
+      .answer-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 430px) {
+      .app {
+        width: min(100% - 1rem, 1120px);
+        padding-top: 0.65rem;
+      }
+
+      .tabs {
+        position: sticky;
+        top: 0.4rem;
+        z-index: 3;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .weak-item {
+        grid-template-columns: 3.2rem 1fr;
+      }
+
+      .weak-item .count {
+        grid-column: 2;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>Tabla de los Sueños</h1>
+      <p class="subtitle">Entrenador offline para memorizar las 100 asociaciones tradicionales de la quiniela argentina, tratado como trivia cultural y práctica de memoria.</p>
+    </header>
+
+    <nav class="tabs" aria-label="Secciones">
+      <button class="tab active" type="button" data-tab="practice">Practicar</button>
+      <button class="tab" type="button" data-tab="choice">Opciones</button>
+      <button class="tab" type="button" data-tab="weak">Errores</button>
+      <button class="tab" type="button" data-tab="study">Tabla</button>
+    </nav>
+
+    <main>
+      <section class="panel active" id="practice-panel" aria-labelledby="practice-title">
+        <div class="grid">
+          <div class="card practice-card">
+            <div class="section-title">
+              <h2 id="practice-title">Práctica</h2>
+              <div class="mode-toggle" aria-label="Dirección de pregunta">
+                <button class="active" type="button" data-direction="numberToMeaning">Número</button>
+                <button type="button" data-direction="meaningToNumber">Significado</button>
+              </div>
+            </div>
+            <div>
+              <p class="prompt-label" id="practice-question-label">Escribí el significado</p>
+              <div class="prompt" id="practice-prompt" aria-live="polite"></div>
+            </div>
+            <form id="practice-form" autocomplete="off">
+              <label class="sr-only" for="answer-input">Respuesta</label>
+              <div class="answer-row">
+                <input id="answer-input" type="text" placeholder="Tu respuesta" inputmode="text">
+                <button class="primary" type="submit">Responder</button>
+              </div>
+            </form>
+            <div class="feedback" id="practice-feedback" aria-live="polite">Ingresá una respuesta y presioná Enter.</div>
+            <div class="controls">
+              <button type="button" id="next-practice">Nueva pregunta</button>
+              <button type="button" id="practice-mistakes">Practice mistakes</button>
+            </div>
+          </div>
+          <aside class="side">
+            <div class="card stats-card" id="stats-card-practice"></div>
+            <div class="card weak-card" id="weak-card-practice"></div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="panel" id="choice-panel" aria-labelledby="choice-title">
+        <div class="grid">
+          <div class="card practice-card">
+            <div class="section-title">
+              <h2 id="choice-title">Múltiple choice</h2>
+              <button type="button" id="next-choice">Nueva</button>
+            </div>
+            <div>
+              <p class="prompt-label" id="choice-question-label">Elegí la respuesta correcta</p>
+              <div class="prompt" id="choice-prompt" aria-live="polite"></div>
+            </div>
+            <div class="choices" id="choices"></div>
+            <div class="feedback" id="choice-feedback" aria-live="polite">Seleccioná una opción.</div>
+            <div class="mc-score" id="choice-score"></div>
+          </div>
+          <aside class="side">
+            <div class="card stats-card" id="stats-card-choice"></div>
+            <div class="card weak-card" id="weak-card-choice"></div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="panel" id="weak-panel" aria-labelledby="weak-title">
+        <div class="grid">
+          <div class="card practice-card">
+            <div class="section-title">
+              <h2 id="weak-title">Lista de errores</h2>
+              <button class="primary" type="button" id="weak-start">Practice mistakes</button>
+            </div>
+            <p class="muted">Los números que fallás se guardan en este navegador. Sirven para armar una ronda enfocada en los puntos débiles.</p>
+            <div class="weak-list" id="weak-list-full"></div>
+            <div class="controls">
+              <button type="button" id="clear-weak">Limpiar errores</button>
+            </div>
+          </div>
+          <aside class="side">
+            <div class="card stats-card" id="stats-card-weak"></div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="panel" id="study-panel" aria-labelledby="study-title">
+        <div class="card table-card">
+          <div class="section-title">
+            <h2 id="study-title">Tabla de estudio</h2>
+            <span class="muted" id="table-count"></span>
+          </div>
+          <div class="table-tools">
+            <label class="sr-only" for="search-input">Buscar por número o significado</label>
+            <input id="search-input" type="search" placeholder="Buscar número o significado">
+            <button type="button" id="clear-search">Limpiar</button>
+          </div>
+          <div class="entries" id="entries"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const dreamTable = [
+      { number: "00", meaning: "Huevos" },
+      { number: "01", meaning: "El agua" },
+      { number: "02", meaning: "El niño" },
+      { number: "03", meaning: "San Cono" },
+      { number: "04", meaning: "La cama" },
+      { number: "05", meaning: "El gato" },
+      { number: "06", meaning: "El perro" },
+      { number: "07", meaning: "El revólver" },
+      { number: "08", meaning: "El incendio" },
+      { number: "09", meaning: "El arroyo" },
+      { number: "10", meaning: "La leche" },
+      { number: "11", meaning: "El minero" },
+      { number: "12", meaning: "El soldado" },
+      { number: "13", meaning: "La yeta" },
+      { number: "14", meaning: "Borracho" },
+      { number: "15", meaning: "Niña bonita" },
+      { number: "16", meaning: "Anillo" },
+      { number: "17", meaning: "Desgracia" },
+      { number: "18", meaning: "Sangre" },
+      { number: "19", meaning: "Pescado" },
+      { number: "20", meaning: "La fiesta" },
+      { number: "21", meaning: "Mujer" },
+      { number: "22", meaning: "El loco" },
+      { number: "23", meaning: "Mariposa" },
+      { number: "24", meaning: "Caballo" },
+      { number: "25", meaning: "Gallina" },
+      { number: "26", meaning: "La misa" },
+      { number: "27", meaning: "El peine" },
+      { number: "28", meaning: "El cerro" },
+      { number: "29", meaning: "San Pedro" },
+      { number: "30", meaning: "Santa Rosa" },
+      { number: "31", meaning: "La luz" },
+      { number: "32", meaning: "El dinero" },
+      { number: "33", meaning: "Cristo" },
+      { number: "34", meaning: "La cabeza" },
+      { number: "35", meaning: "Pajarito" },
+      { number: "36", meaning: "Manteca" },
+      { number: "37", meaning: "Dentista" },
+      { number: "38", meaning: "Piedras" },
+      { number: "39", meaning: "Lluvia" },
+      { number: "40", meaning: "El cura" },
+      { number: "41", meaning: "Cuchillo" },
+      { number: "42", meaning: "Zapatillas" },
+      { number: "43", meaning: "Balcón" },
+      { number: "44", meaning: "La cárcel" },
+      { number: "45", meaning: "Vino" },
+      { number: "46", meaning: "Tomates" },
+      { number: "47", meaning: "Muerto" },
+      { number: "48", meaning: "Muerto que habla" },
+      { number: "49", meaning: "La carne" },
+      { number: "50", meaning: "El pan" },
+      { number: "51", meaning: "Serrucho" },
+      { number: "52", meaning: "Madre e hijo" },
+      { number: "53", meaning: "El barco" },
+      { number: "54", meaning: "La vaca" },
+      { number: "55", meaning: "La música" },
+      { number: "56", meaning: "La caída" },
+      { number: "57", meaning: "Jorobado" },
+      { number: "58", meaning: "Ahogado" },
+      { number: "59", meaning: "Las plantas" },
+      { number: "60", meaning: "La virgen" },
+      { number: "61", meaning: "Escopeta" },
+      { number: "62", meaning: "Inundación" },
+      { number: "63", meaning: "Casamiento" },
+      { number: "64", meaning: "Llorona" },
+      { number: "65", meaning: "Cazador" },
+      { number: "66", meaning: "La lombriz" },
+      { number: "67", meaning: "Víbora" },
+      { number: "68", meaning: "Sobrina" },
+      { number: "69", meaning: "Vicios" },
+      { number: "70", meaning: "Muerto soñado" },
+      { number: "71", meaning: "Excremento" },
+      { number: "72", meaning: "Sorpresa" },
+      { number: "73", meaning: "Hospital" },
+      { number: "74", meaning: "Negros" },
+      { number: "75", meaning: "Pescador" },
+      { number: "76", meaning: "Llamas" },
+      { number: "77", meaning: "Piernas" },
+      { number: "78", meaning: "Ramera" },
+      { number: "79", meaning: "Ladrón" },
+      { number: "80", meaning: "Bocha" },
+      { number: "81", meaning: "Las flores" },
+      { number: "82", meaning: "Pelea" },
+      { number: "83", meaning: "Mal tiempo" },
+      { number: "84", meaning: "La iglesia" },
+      { number: "85", meaning: "La linterna" },
+      { number: "86", meaning: "Humo" },
+      { number: "87", meaning: "Piojos" },
+      { number: "88", meaning: "El papa" },
+      { number: "89", meaning: "La rata" },
+      { number: "90", meaning: "El miedo" },
+      { number: "91", meaning: "Excusado" },
+      { number: "92", meaning: "El médico" },
+      { number: "93", meaning: "Enamorado" },
+      { number: "94", meaning: "Cementerio" },
+      { number: "95", meaning: "Anteojos" },
+      { number: "96", meaning: "Marido" },
+      { number: "97", meaning: "La mesa" },
+      { number: "98", meaning: "Lavandera" },
+      { number: "99", meaning: "Hermanos" }
+    ];
+
+    const STORAGE_KEYS = {
+      totals: "quinielaTrainerTotals",
+      mistakes: "quinielaTrainerMistakes"
+    };
+
+    const state = {
+      activeTab: "practice",
+      direction: "numberToMeaning",
+      practicePool: dreamTable,
+      practiceItem: null,
+      practiceAnswered: false,
+      choiceItem: null,
+      choiceDirection: "numberToMeaning",
+      choiceAnswered: false,
+      choiceCorrect: 0,
+      choiceIncorrect: 0,
+      sessionAttempted: 0,
+      sessionCorrect: 0,
+      totals: readJSON(STORAGE_KEYS.totals, { attempted: 0, correct: 0 }),
+      mistakes: readJSON(STORAGE_KEYS.mistakes, {})
+    };
+
+    const els = {
+      tabs: document.querySelectorAll(".tab"),
+      panels: document.querySelectorAll(".panel"),
+      directionButtons: document.querySelectorAll("[data-direction]"),
+      practicePrompt: document.getElementById("practice-prompt"),
+      practiceLabel: document.getElementById("practice-question-label"),
+      practiceForm: document.getElementById("practice-form"),
+      answerInput: document.getElementById("answer-input"),
+      practiceFeedback: document.getElementById("practice-feedback"),
+      nextPractice: document.getElementById("next-practice"),
+      practiceMistakes: document.getElementById("practice-mistakes"),
+      choices: document.getElementById("choices"),
+      choicePrompt: document.getElementById("choice-prompt"),
+      choiceLabel: document.getElementById("choice-question-label"),
+      choiceFeedback: document.getElementById("choice-feedback"),
+      choiceScore: document.getElementById("choice-score"),
+      nextChoice: document.getElementById("next-choice"),
+      weakStart: document.getElementById("weak-start"),
+      clearWeak: document.getElementById("clear-weak"),
+      weakListFull: document.getElementById("weak-list-full"),
+      entries: document.getElementById("entries"),
+      tableCount: document.getElementById("table-count"),
+      searchInput: document.getElementById("search-input"),
+      clearSearch: document.getElementById("clear-search")
+    };
+
+    function readJSON(key, fallback) {
+      try {
+        return JSON.parse(localStorage.getItem(key)) || fallback;
+      } catch {
+        return fallback;
+      }
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEYS.totals, JSON.stringify(state.totals));
+      localStorage.setItem(STORAGE_KEYS.mistakes, JSON.stringify(state.mistakes));
+    }
+
+    function shuffle(items) {
+      const copy = [...items];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function randomItem(items) {
+      return items[Math.floor(Math.random() * items.length)];
+    }
+
+    function normalizeText(value) {
+      return String(value)
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .replace(/[^\p{L}\p{N}\s]/gu, " ")
+        .replace(/\b(el|la|los|las|un|una|unos|unas)\b/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    function normalizeNumber(value) {
+      const digits = String(value).replace(/\D/g, "");
+      if (digits.length === 1) return digits.padStart(2, "0");
+      if (digits.length === 2) return digits;
+      return digits.replace(/^0+/, "").padStart(2, "0").slice(-2);
+    }
+
+    function isMeaningAnswerCorrect(answer, item) {
+      const expected = normalizeText(item.meaning);
+      const given = normalizeText(answer);
+      return given === expected || singularize(given) === singularize(expected);
+    }
+
+    function singularize(value) {
+      return value
+        .split(" ")
+        .map((word) => word.length > 4 && word.endsWith("es") ? word.slice(0, -2) : word)
+        .map((word) => word.length > 3 && word.endsWith("s") ? word.slice(0, -1) : word)
+        .join(" ");
+    }
+
+    function expectedFor(item, direction) {
+      return direction === "numberToMeaning" ? item.meaning : item.number;
+    }
+
+    function promptFor(item, direction) {
+      return direction === "numberToMeaning" ? item.number : item.meaning;
+    }
+
+    function labelFor(direction) {
+      return direction === "numberToMeaning" ? "Escribí el significado" : "Escribí el número";
+    }
+
+    function checkAnswer(answer, item, direction) {
+      if (direction === "numberToMeaning") return isMeaningAnswerCorrect(answer, item);
+      return normalizeNumber(answer) === item.number;
+    }
+
+    function recordAnswer(item, isCorrect) {
+      state.sessionAttempted += 1;
+      state.totals.attempted += 1;
+      if (isCorrect) {
+        state.sessionCorrect += 1;
+        state.totals.correct += 1;
+      } else {
+        state.mistakes[item.number] = (state.mistakes[item.number] || 0) + 1;
+      }
+      saveState();
+      renderStats();
+      renderWeakLists();
+    }
+
+    function weakItems() {
+      return dreamTable
+        .filter((item) => state.mistakes[item.number] > 0)
+        .sort((a, b) => state.mistakes[b.number] - state.mistakes[a.number] || a.number.localeCompare(b.number));
+    }
+
+    function setTab(tab) {
+      state.activeTab = tab;
+      els.tabs.forEach((button) => button.classList.toggle("active", button.dataset.tab === tab));
+      els.panels.forEach((panel) => panel.classList.toggle("active", panel.id === `${tab}-panel`));
+      if (tab === "practice") els.answerInput.focus();
+      if (tab === "study") els.searchInput.focus();
+    }
+
+    function newPracticeQuestion(pool = state.practicePool) {
+      state.practicePool = pool.length ? pool : dreamTable;
+      state.practiceItem = randomItem(state.practicePool);
+      state.practiceAnswered = false;
+      els.practicePrompt.textContent = promptFor(state.practiceItem, state.direction);
+      els.practicePrompt.classList.toggle("meaning", state.direction === "meaningToNumber");
+      els.practiceLabel.textContent = labelFor(state.direction);
+      els.answerInput.value = "";
+      els.answerInput.placeholder = state.direction === "numberToMeaning" ? "Ej: Huevos" : "Ej: 00";
+      els.practiceFeedback.className = "feedback";
+      els.practiceFeedback.textContent = "Ingresá una respuesta y presioná Enter.";
+      els.answerInput.focus();
+    }
+
+    function submitPractice(event) {
+      event.preventDefault();
+      if (!state.practiceItem || state.practiceAnswered) {
+        newPracticeQuestion();
+        return;
+      }
+
+      const answer = els.answerInput.value;
+      if (!answer.trim()) {
+        els.practiceFeedback.className = "feedback bad";
+        els.practiceFeedback.textContent = "Escribí una respuesta antes de enviar.";
+        return;
+      }
+
+      const isCorrect = checkAnswer(answer, state.practiceItem, state.direction);
+      state.practiceAnswered = true;
+      recordAnswer(state.practiceItem, isCorrect);
+      els.practiceFeedback.className = `feedback ${isCorrect ? "good" : "bad"}`;
+      els.practiceFeedback.textContent = isCorrect
+        ? `Correcto. ${state.practiceItem.number} = ${state.practiceItem.meaning}.`
+        : `Incorrecto. Respuesta correcta: ${state.practiceItem.number} = ${state.practiceItem.meaning}.`;
+    }
+
+    function setDirection(direction) {
+      state.direction = direction;
+      els.directionButtons.forEach((button) => button.classList.toggle("active", button.dataset.direction === direction));
+      newPracticeQuestion();
+    }
+
+    function newChoiceQuestion() {
+      state.choiceDirection = Math.random() > 0.5 ? "numberToMeaning" : "meaningToNumber";
+      state.choiceItem = randomItem(dreamTable);
+      state.choiceAnswered = false;
+
+      const distractors = shuffle(dreamTable.filter((item) => item.number !== state.choiceItem.number)).slice(0, 3);
+      const options = shuffle([state.choiceItem, ...distractors]);
+
+      els.choicePrompt.textContent = promptFor(state.choiceItem, state.choiceDirection);
+      els.choicePrompt.classList.toggle("meaning", state.choiceDirection === "meaningToNumber");
+      els.choiceLabel.textContent = state.choiceDirection === "numberToMeaning" ? "Elegí el significado" : "Elegí el número";
+      els.choiceFeedback.className = "feedback";
+      els.choiceFeedback.textContent = "Seleccioná una opción.";
+      els.choices.innerHTML = "";
+
+      options.forEach((item) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "choice";
+        button.textContent = expectedFor(item, state.choiceDirection);
+        button.dataset.number = item.number;
+        button.addEventListener("click", () => chooseOption(button, item));
+        els.choices.appendChild(button);
+      });
+
+      renderChoiceScore();
+    }
+
+    function chooseOption(button, item) {
+      if (state.choiceAnswered) return;
+      state.choiceAnswered = true;
+      const isCorrect = item.number === state.choiceItem.number;
+      if (isCorrect) {
+        state.choiceCorrect += 1;
+      } else {
+        state.choiceIncorrect += 1;
+      }
+      recordAnswer(state.choiceItem, isCorrect);
+
+      [...els.choices.children].forEach((choice) => {
+        const optionIsCorrect = choice.dataset.number === state.choiceItem.number;
+        choice.classList.toggle("correct", optionIsCorrect);
+        choice.classList.toggle("incorrect", choice === button && !isCorrect);
+        choice.disabled = true;
+      });
+
+      els.choiceFeedback.className = `feedback ${isCorrect ? "good" : "bad"}`;
+      els.choiceFeedback.textContent = isCorrect
+        ? `Correcto. ${state.choiceItem.number} = ${state.choiceItem.meaning}.`
+        : `Incorrecto. Respuesta correcta: ${state.choiceItem.number} = ${state.choiceItem.meaning}.`;
+      renderChoiceScore();
+    }
+
+    function renderChoiceScore() {
+      const total = state.choiceCorrect + state.choiceIncorrect;
+      const accuracy = total ? Math.round((state.choiceCorrect / total) * 100) : 0;
+      els.choiceScore.textContent = `Múltiple choice: ${state.choiceCorrect} correctas, ${state.choiceIncorrect} incorrectas, ${accuracy}% precisión.`;
+    }
+
+    function renderStats() {
+      const sessionAccuracy = state.sessionAttempted ? Math.round((state.sessionCorrect / state.sessionAttempted) * 100) : 0;
+      const totalAccuracy = state.totals.attempted ? Math.round((state.totals.correct / state.totals.attempted) * 100) : 0;
+      const markup = `
+        <div class="section-title">
+          <h3>Stats</h3>
+          <button class="ghost reset-stats" type="button">Reset stats</button>
+        </div>
+        <div class="stats-grid">
+          <div class="stat"><span>Sesión</span><strong>${sessionAccuracy}%</strong></div>
+          <div class="stat"><span>Total intentos</span><strong>${state.totals.attempted}</strong></div>
+          <div class="stat"><span>Total correctas</span><strong>${state.totals.correct}</strong></div>
+          <div class="stat"><span>Precisión total</span><strong>${totalAccuracy}%</strong></div>
+        </div>
+      `;
+      document.querySelectorAll("[id^='stats-card']").forEach((card) => {
+        card.innerHTML = markup;
+        card.querySelector(".reset-stats").addEventListener("click", resetStats);
+      });
+    }
+
+    function renderWeakLists() {
+      const items = weakItems();
+      const compactMarkup = weakMarkup(items.slice(0, 6), true);
+      document.querySelectorAll("[id^='weak-card']").forEach((card) => {
+        card.innerHTML = `
+          <div class="section-title">
+            <h3>Errores</h3>
+            <span class="muted">${items.length}</span>
+          </div>
+          ${compactMarkup}
+        `;
+      });
+      els.weakListFull.innerHTML = weakMarkup(items, false);
+      els.practiceMistakes.disabled = items.length === 0;
+      els.weakStart.disabled = items.length === 0;
+    }
+
+    function weakMarkup(items, compact) {
+      if (!items.length) return `<div class="empty">Todavía no hay errores guardados.</div>`;
+      return `
+        <div class="weak-list">
+          ${items.map((item) => `
+            <div class="weak-item">
+              <span class="badge">${item.number}</span>
+              <strong>${item.meaning}</strong>
+              <span class="count">${state.mistakes[item.number]} ${compact ? "fallos" : "fallo(s)"}</span>
+            </div>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    function resetStats() {
+      state.sessionAttempted = 0;
+      state.sessionCorrect = 0;
+      state.choiceCorrect = 0;
+      state.choiceIncorrect = 0;
+      state.totals = { attempted: 0, correct: 0 };
+      saveState();
+      renderStats();
+      renderChoiceScore();
+    }
+
+    function clearWeak() {
+      state.mistakes = {};
+      saveState();
+      renderWeakLists();
+    }
+
+    function startMistakePractice() {
+      const items = weakItems();
+      if (!items.length) return;
+      setTab("practice");
+      newPracticeQuestion(items);
+    }
+
+    function renderTable() {
+      const query = normalizeText(els.searchInput.value);
+      const numberQuery = els.searchInput.value.replace(/\D/g, "");
+      const results = dreamTable.filter((item) => {
+        const meaning = normalizeText(item.meaning);
+        return !query || meaning.includes(query) || item.number.includes(numberQuery) || item.number.includes(query);
+      });
+
+      els.tableCount.textContent = `${results.length} de ${dreamTable.length}`;
+      els.entries.innerHTML = results.length
+        ? results.map((item) => `
+          <article class="entry">
+            <span class="entry-number">${item.number}</span>
+            <span class="entry-meaning">${item.meaning}</span>
+          </article>
+        `).join("")
+        : `<div class="empty">No hay resultados para esa búsqueda.</div>`;
+    }
+
+    function bindEvents() {
+      els.tabs.forEach((button) => button.addEventListener("click", () => setTab(button.dataset.tab)));
+      els.directionButtons.forEach((button) => button.addEventListener("click", () => setDirection(button.dataset.direction)));
+      els.practiceForm.addEventListener("submit", submitPractice);
+      els.nextPractice.addEventListener("click", () => newPracticeQuestion());
+      els.practiceMistakes.addEventListener("click", startMistakePractice);
+      els.nextChoice.addEventListener("click", newChoiceQuestion);
+      els.weakStart.addEventListener("click", startMistakePractice);
+      els.clearWeak.addEventListener("click", clearWeak);
+      els.searchInput.addEventListener("input", renderTable);
+      els.clearSearch.addEventListener("click", () => {
+        els.searchInput.value = "";
+        renderTable();
+        els.searchInput.focus();
+      });
+      document.addEventListener("keydown", (event) => {
+        if (state.activeTab === "choice" && event.key >= "1" && event.key <= "4") {
+          const button = els.choices.children[Number(event.key) - 1];
+          if (button) button.click();
+        }
+      });
+    }
+
+    bindEvents();
+    renderStats();
+    renderWeakLists();
+    renderTable();
+    newPracticeQuestion();
+    newChoiceQuestion();
+  </script>
+</body>
+</html>
