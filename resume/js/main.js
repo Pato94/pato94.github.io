@@ -1,24 +1,18 @@
-const sections = document.querySelectorAll('section');
-const links = document.querySelectorAll('.links a')
+const navigationLinks = document.querySelectorAll('.nav-links a');
+const sections = document.querySelectorAll('#selected-work, #resume, #contact');
 
-document.querySelectorAll('.resume-container').forEach(e => {
-  e.addEventListener('scroll', (eve) => {
-    console.log('scrolling')
-    console.log(e.classList)
-    let current = '';
-    sections.forEach(section => {
-      const sectionTop = section.offsetTop;
-      const sectionHeight = section.offsetHeight
-      console.log(e.scrollTop)
-      if (e.scrollTop > (sectionTop - sectionHeight / 3)) {
-        current = section.getAttribute('id');
-      }
-    })
-    links.forEach(l => {
-      l.classList.remove('active');
-      if (l.classList.contains(current)) {
-        l.classList.add('active');
-      }
-    })
-  });
-})
+if ('IntersectionObserver' in window) {
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      navigationLinks.forEach(link => {
+        if (link.hash === `#${entry.target.id}`) {
+          link.setAttribute('aria-current', 'location');
+        } else {
+          link.removeAttribute('aria-current');
+        }
+      });
+    });
+  }, { rootMargin: '-15% 0px -20% 0px' });
+  sections.forEach(section => observer.observe(section));
+}
