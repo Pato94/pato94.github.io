@@ -125,11 +125,15 @@ body {
 
 .main-image {
   max-height: 600px;
+  max-width: 50%;
+  object-fit: contain;
 }
 
 @media (max-width:767px) {
   .main-image {
     margin-top: 30px;
+    max-width: 100%;
+    height: auto;
   }
 }
 
@@ -356,4 +360,32 @@ body {
 
 .experience-institution {
   margin: 10px 0;
+}
+
+.work-experience {
+  flex-basis: 100%;
+  margin-right: 0;
+}
+
+.experience-role {
+  margin: 0 0 8px;
+}
+
+.experience-description {
+  margin: 0;
+  padding-left: 20px;
+  line-height: 1.6;
+}
+
+.experience-description li + li {
+  margin-top: 8px;
+}
+
+.skill p {
+  margin: 6px 0 0;
+  line-height: 1.6;
+}
+
+.contact-block a {
+  overflow-wrap: anywhere;
 }
